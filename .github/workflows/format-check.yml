@@ -1,0 +1,29 @@
+name: Format Code with Black
+
+on:
+  pull_request:
+    paths:
+      - '**/*.py'
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest  # Uses Ubuntu as environment
+    steps:
+      # Step 1: Retrieve the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Install Python 3.12
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      # Step 3 : Install Black
+      - name: Install Black
+        run: pip install black
+
+      # Step 4: Check formatting
+      - name: Run Black check
+        run: black --check .
+        
