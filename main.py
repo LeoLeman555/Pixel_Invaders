@@ -1,4 +1,5 @@
 import pyxel as px
+from source.enemies import *
 from source.laser import *
 
 SCREEN_SIZE = 128
@@ -15,15 +16,19 @@ class Main:
         self.y = SCREEN_SIZE // 2
 
         self.laser_manager = LaserManager()
+        self.enemies_manager = EnemiesManager(self)
 
         self.run()
 
     def update(self):
         """Update game logic."""
+        if not self.enemies_manager.enemies:
+            self.enemies_manager.create_wave(0, 5, 2)
         if px.btnp(px.KEY_SPACE):
             self.laser_manager.create_laser(1, 3, 10, self.x, self.y, SHIP_SIZE[0])
         self.laser_manager.move_lasers()
-
+        self.enemies_manager.move_enemies()
+        self.enemies_manager.delete_enemy()
         self.move()
 
     def move(self):
@@ -44,9 +49,10 @@ class Main:
     def draw(self):
         """Render game elements on the screen."""
         px.cls(0)
-        self.laser_manager.draw_lasers()
         px.blt(self.x, self.y, 0, 0, 0, SHIP_SIZE[0], SHIP_SIZE[1] + 2)
-        px.text(0, 0, f"{self.x, self.y}", 7) # Draw the x and the y for debugging
+        self.laser_manager.draw_lasers()
+        self.enemies_manager.draw_enemies()
+
 
     def run(self):
         """Start the game loop."""
