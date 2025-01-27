@@ -23,7 +23,9 @@ class EnemiesManager:
         self.enemies = []
         self.speed = self.ENEMY_SPEED  # Horizontal movement speed
 
-    def create_wave(self, enemy_id: int, num_enemies: int = 5, num_rows: int = 1) -> None:
+    def create_wave(
+        self, enemy_id: int, num_enemies: int = 5, num_rows: int = 1
+    ) -> None:
         """Create a wave of enemies with optional rows."""
         if not (0 <= enemy_id < len(self.enemy_data)):
             print(f"Invalid enemy_id: {enemy_id}")
@@ -37,13 +39,15 @@ class EnemiesManager:
             for i in range(num_enemies):
                 x = start_x + i * (px.width // num_enemies)
                 y = self.INITIAL_Y + row * (enemy_info["height"] + self.ROW_SPACING)
-                self.enemies.append({
-                    "x": x,
-                    "y": y,
-                    "image_bank": enemy_info["image_bank"],
-                    "width": enemy_info["width"],
-                    "height": enemy_info["height"]
-                })
+                self.enemies.append(
+                    {
+                        "x": x,
+                        "y": y,
+                        "image_bank": enemy_info["image_bank"],
+                        "width": enemy_info["width"],
+                        "height": enemy_info["height"],
+                    }
+                )
 
     def move_enemies(self):
         """Move all enemies horizontally and adjust if they reach screen edges."""
@@ -66,8 +70,10 @@ class EnemiesManager:
         for enemy in self.enemies:
             enemy["x"] += self.speed
 
-        # Check if an enemy reaches the bottom of the screen
-            if enemy["y"] + enemy["height"] >= px.height or self.is_collision_with_player(enemy):
+            # Check if an enemy reaches the bottom of the screen
+            if enemy["y"] + enemy[
+                "height"
+            ] >= px.height or self.is_collision_with_player(enemy):
                 self.main.lose_life()
                 self.enemies.remove(enemy)
 
@@ -77,10 +83,10 @@ class EnemiesManager:
             enemy["x"] <= laser[0] <= enemy["x"] + enemy["width"]
             and enemy["y"] <= laser[1] <= enemy["y"] + enemy["height"]
         )
-    
+
     def is_collision_with_player(self, enemy) -> bool:
         """Check if an enemy collides with the player."""
-        player_x, player_y = self.main.x, self.main.y 
+        player_x, player_y = self.main.x, self.main.y
         player_width, player_height = self.main.SHIP_SIZE
 
         return (
@@ -102,4 +108,13 @@ class EnemiesManager:
     def draw_enemies(self):
         """Draw all active enemies."""
         for enemy in self.enemies:
-            px.blt(enemy["x"], enemy["y"], enemy["image_bank"], 0, 0, enemy["width"], enemy["height"], 0)
+            px.blt(
+                enemy["x"],
+                enemy["y"],
+                enemy["image_bank"],
+                0,
+                0,
+                enemy["width"],
+                enemy["height"],
+                0,
+            )

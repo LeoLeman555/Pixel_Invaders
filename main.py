@@ -2,6 +2,7 @@ import pyxel as px
 from source.enemies import *
 from source.laser import *
 
+
 class Main:
     SCREEN_SIZE = 128
     SHIP_SIZE = (11, 16)
@@ -42,7 +43,7 @@ class Main:
 
         if px.btnp(px.KEY_SPACE):
             self.laser_manager.create_laser(1, 3, 10, self.x, self.y, self.SHIP_SIZE[0])
-        
+
         self.laser_manager.move_lasers()
         self.enemies_manager.move_enemies()
         self.enemies_manager.delete_enemy()
@@ -113,6 +114,7 @@ class Main:
     def run(self):
         """Start the game loop."""
         px.run(self.update, self.draw)
+
 
 if __name__ == "__main__":
     Main()
