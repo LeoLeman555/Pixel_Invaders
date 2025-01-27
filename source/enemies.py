@@ -66,20 +66,38 @@ class EnemiesManager:
         for enemy in self.enemies:
             enemy["x"] += self.speed
 
-    def is_collision(self, enemy, laser) -> bool:
+        # Check if an enemy reaches the bottom of the screen
+            if enemy["y"] + enemy["height"] >= px.height or self.is_collision_with_player(enemy):
+                self.main.lose_life()
+                self.enemies.remove(enemy)
+
+    def is_collision_with_laser(self, enemy, laser) -> bool:
         """Check if a laser collides with an enemy."""
         return (
             enemy["x"] <= laser[0] <= enemy["x"] + enemy["width"]
             and enemy["y"] <= laser[1] <= enemy["y"] + enemy["height"]
+        )
+    
+    def is_collision_with_player(self, enemy) -> bool:
+        """Check if an enemy collides with the player."""
+        player_x, player_y = self.main.x, self.main.y 
+        player_width, player_height = self.main.SHIP_SIZE
+
+        return (
+            enemy["x"] < player_x + player_width
+            and enemy["x"] + enemy["width"] > player_x
+            and enemy["y"] < player_y + player_height
+            and enemy["y"] + enemy["height"] > player_y
         )
 
     def delete_enemy(self):
         """Remove enemies that are hit by lasers."""
         for laser in self.main.laser_manager.lasers[:]:
             for enemy in self.enemies[:]:
-                if self.is_collision(enemy, laser):
+                if self.is_collision_with_laser(enemy, laser):
                     self.enemies.remove(enemy)
                     self.main.laser_manager.lasers.remove(laser)
+                    self.main.score += 10
 
     def draw_enemies(self):
         """Draw all active enemies."""
