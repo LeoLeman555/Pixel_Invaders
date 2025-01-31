@@ -83,6 +83,18 @@ class EnemiesManager:
             enemy["x"] <= laser[0] <= enemy["x"] + enemy["width"]
             and enemy["y"] <= laser[1] <= enemy["y"] + enemy["height"]
         )
+    
+    def is_collision_with_missile(self, enemy, missile) -> bool:
+        """Check if a missile collides with an enemy."""
+        missile_radius = 1  # Missile radius
+
+        return (
+            enemy["x"] < missile["x"] + missile_radius
+            and enemy["x"] + enemy["width"] > missile["x"] - missile_radius
+            and enemy["y"] < missile["y"] + missile_radius
+            and enemy["y"] + enemy["height"] > missile["y"] - missile_radius
+        )
+
 
     def is_collision_with_player(self, enemy) -> bool:
         """Check if an enemy collides with the player."""
@@ -97,12 +109,18 @@ class EnemiesManager:
         )
 
     def delete_enemy(self):
-        """Remove enemies that are hit by lasers."""
+        """Remove enemies that are hit by lasers or a missile."""
         for laser in self.main.laser_manager.lasers[:]:
             for enemy in self.enemies[:]:
                 if self.is_collision_with_laser(enemy, laser):
                     self.enemies.remove(enemy)
                     self.main.laser_manager.lasers.remove(laser)
+                    self.main.score += 10
+
+        for missile in self.main.laser_manager.missiles[:]:
+            for enemy in self.enemies[:]:
+                if self.is_collision_with_missile(enemy, missile):
+                    self.enemies.remove(enemy)
                     self.main.score += 10
 
     def draw_enemies(self):

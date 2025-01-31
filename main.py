@@ -26,7 +26,9 @@ class Main:
         self.score = 0
         self.game_state = "playing"  # Can be 'playing' or 'game_over'
 
-        self.laser_manager = LaserManager()
+        self.shooting_count = 0
+
+        self.laser_manager = LaserManager(self)
         self.enemies_manager = EnemiesManager(self)
 
     def update(self):
@@ -38,13 +40,25 @@ class Main:
 
     def update_playing(self):
         """Update logic while the game is running."""
-        if len(self.enemies_manager.enemies) < 3:
+        if not self.enemies_manager.enemies:
             self.enemies_manager.create_wave(0, 5, 2)
 
         if px.btnp(px.KEY_SPACE):
-            self.laser_manager.create_laser(1, 3, 10, self.x, self.y, self.SHIP_SIZE[0])
+            if self.shooting_count % 20 == 10:
+                self.laser_manager.create_missile(
+                    self.x, self.y + self.SHIP_SIZE[0] // 2
+                )
+                self.laser_manager.create_missile(
+                    self.x + self.SHIP_SIZE[0], self.y + self.SHIP_SIZE[0] // 2
+                )
+            else:
+                self.laser_manager.create_laser(
+                    1, 3, 10, self.x, self.y, self.SHIP_SIZE[0]
+                )
+            self.shooting_count += 1
 
         self.laser_manager.move_lasers()
+        self.laser_manager.move_missiles()
         self.enemies_manager.move_enemies()
         self.enemies_manager.delete_enemy()
         self.move()
@@ -89,6 +103,7 @@ class Main:
         """Draw the game screen."""
         px.blt(self.x, self.y, 0, 0, 0, self.SHIP_SIZE[0], self.SHIP_SIZE[1] + 2)
         self.laser_manager.draw_lasers()
+        self.laser_manager.draw_missiles()
         self.enemies_manager.draw_enemies()
 
         # Management of flashing if lives are at 1
