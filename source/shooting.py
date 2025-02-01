@@ -25,7 +25,7 @@ class ShootingManager:
         self.lasers.append([laser_x, laser_y, laser_width, laser_height, laser_color])
 
     def create_missile(self, ship_x: int, ship_y: int):
-        """ "Create a missile that heads for the nearest enemy."""
+        """Create a missile that heads for the nearest enemy."""
         if not self.main.enemies_manager.enemies:
             return
 
@@ -56,6 +56,20 @@ class ShootingManager:
             {"x": missile_x, "y": missile_y, "dx": dx, "dy": dy, "speed": 5}
         )
 
+    def overheating(self):
+        """Manages the weapon overheating system."""
+        if self.main.heat > 0:
+            self.main.heat -= 0.1  # Heat is slowly reduced
+
+        # Gestion de la surchauffe
+        if self.main.heat >= self.main.max_heat:
+            self.main.cooldown = 60  # Waiting time before firing again (60 frames)
+
+        if self.main.cooldown > 0:
+            self.main.cooldown -= 1
+            if self.main.cooldown == 0:
+                self.main.heat = 0  # Resets the heat after overheating
+
     def move_lasers(self):
         """Move all the lasers upwards and remove them if they are off-screen."""
         for laser in self.lasers[:]:  # Iterate over a copy to avoid modification issues
@@ -79,11 +93,21 @@ class ShootingManager:
                 self.missiles.remove(missile)
 
     def draw_lasers(self):
-        """Drawing lasers."""
+        """Draw lasers."""
         for laser in self.lasers:
             px.rect(*laser)
 
     def draw_missiles(self):
-        """Drawing missiles."""
+        """Draw missiles."""
         for missile in self.missiles:
             px.circ(missile["x"], missile["y"], 1, 8)  # Little circle
+
+    def draw_overheating(self):
+        """Draw all the overheating composent"""
+        px.rect(40, 3, self.main.heat * 3, 3, 8)
+        px.rectb(40, 3, self.main.max_heat * 3, 3, 7)
+
+        # Overheating status display
+        if self.main.cooldown > 0:
+            if (px.frame_count // 10) % 2 == 0:
+                px.text(40, 10, "OVERHEAT !", 8)
