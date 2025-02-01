@@ -2,8 +2,8 @@ import pyxel as px
 import math
 
 
-class LaserManager:
-    """Handle the creation and movement of lasers and missiles."""
+class ShootingManager:
+    """Handle the creation and movements of lasers and missiles."""
 
     def __init__(self, main):
         self.main = main
@@ -24,15 +24,17 @@ class LaserManager:
         laser_y = ship_y
         self.lasers.append([laser_x, laser_y, laser_width, laser_height, laser_color])
 
-    def create_missile(self, ship_x, ship_y):
-        """"Create a missile that heads for the nearest enemy."""
+    def create_missile(self, ship_x: int, ship_y: int):
+        """ "Create a missile that heads for the nearest enemy."""
         if not self.main.enemies_manager.enemies:
-            return 
+            return
 
         # Find the nearest enemy
         closest_enemy = min(
-            self.main.enemies_manager.enemies,
-            key=lambda enemy: math.dist((ship_x, ship_y), (enemy["x"], enemy["y"])),
+            self.main.enemies_manager.enemies,  # Access the list of enemies from the enemies_manager
+            key=lambda enemy: math.dist(
+                (ship_x, ship_y), (enemy["x"], enemy["y"])
+            ),  # Use the distance as the key for comparison
         )
 
         missile_x = ship_x
@@ -55,12 +57,14 @@ class LaserManager:
         )
 
     def move_lasers(self):
+        """Move all the lasers upwards and remove them if they are off-screen."""
         for laser in self.lasers[:]:  # Iterate over a copy to avoid modification issues
             laser[1] -= 5  # Move the laser upward
             if laser[1] < 0:  # Remove if off-screen
                 self.lasers.remove(laser)
 
     def move_missiles(self):
+        """Move all missiles with their vectors and delete them if they are off-screen."""
         for missile in self.missiles:
             missile["x"] += missile["dx"] * missile["speed"]
             missile["y"] += missile["dy"] * missile["speed"]

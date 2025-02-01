@@ -1,6 +1,6 @@
 import pyxel as px
 from source.enemies import *
-from source.laser import *
+from source.shooting import *
 
 
 class Main:
@@ -28,7 +28,7 @@ class Main:
 
         self.shooting_count = 0
 
-        self.laser_manager = LaserManager(self)
+        self.shooting_manager = ShootingManager(self)
         self.enemies_manager = EnemiesManager(self)
 
     def update(self):
@@ -45,20 +45,20 @@ class Main:
 
         if px.btnp(px.KEY_SPACE):
             if self.shooting_count % 20 == 10:
-                self.laser_manager.create_missile(
+                self.shooting_manager.create_missile(
                     self.x, self.y + self.SHIP_SIZE[0] // 2
                 )
-                self.laser_manager.create_missile(
+                self.shooting_manager.create_missile(
                     self.x + self.SHIP_SIZE[0], self.y + self.SHIP_SIZE[0] // 2
                 )
             else:
-                self.laser_manager.create_laser(
+                self.shooting_manager.create_laser(
                     1, 3, 10, self.x, self.y, self.SHIP_SIZE[0]
                 )
             self.shooting_count += 1
 
-        self.laser_manager.move_lasers()
-        self.laser_manager.move_missiles()
+        self.shooting_manager.move_lasers()
+        self.shooting_manager.move_missiles()
         self.enemies_manager.move_enemies()
         self.enemies_manager.delete_enemy()
         self.move()
@@ -102,8 +102,8 @@ class Main:
     def draw_playing(self):
         """Draw the game screen."""
         px.blt(self.x, self.y, 0, 0, 0, self.SHIP_SIZE[0], self.SHIP_SIZE[1] + 2)
-        self.laser_manager.draw_lasers()
-        self.laser_manager.draw_missiles()
+        self.shooting_manager.draw_lasers()
+        self.shooting_manager.draw_missiles()
         self.enemies_manager.draw_enemies()
 
         # Management of flashing if lives are at 1
