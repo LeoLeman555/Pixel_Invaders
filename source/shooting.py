@@ -63,7 +63,8 @@ class ShootingManager:
 
         # Gestion de la surchauffe
         if self.main.heat >= self.main.max_heat:
-            self.main.cooldown = 60  # Waiting time before firing again (60 frames)
+            self.main.cooldown = 100  # Waiting time before firing again (60 frames)
+            self.main.heat = self.main.max_heat
 
         if self.main.cooldown > 0:
             self.main.cooldown -= 1
@@ -104,8 +105,8 @@ class ShootingManager:
 
     def draw_overheating(self):
         """Draw all the overheating composent"""
-        px.rect(40, 3, self.main.heat * 3, 3, 8)
-        px.rectb(40, 3, self.main.max_heat * 3, 3, 7)
+        px.rect(42, 3, self.main.heat * 3, 3, 8)
+        px.rectb(42, 3, self.main.max_heat * 3, 3, 7)
 
         # Overheating status display
         if self.main.cooldown > 0:

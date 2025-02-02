@@ -13,6 +13,7 @@ class Main:
 
         # Load the ship image
         px.image(0).load(0, 0, "assets/images/player_ship.png")
+        px.image(2).load(0, 0, "assets/images/heart.png")
 
         self.reset_game()
 
@@ -20,10 +21,11 @@ class Main:
 
     def reset_game(self):
         """Reset game variables for a new game."""
-        self.x = self.SCREEN_SIZE // 2
-        self.y = self.SCREEN_SIZE // 2
-        self.lives = 3
+        self.x = self.SCREEN_SIZE // 2 - self.SHIP_SIZE[0] // 2
+        self.y = self.SCREEN_SIZE - self.SHIP_SIZE[1]
+        self.lives = 5
         self.score = 0
+        self.ship_speed = 2
         self.game_state = "playing"  # Can be 'playing' or 'game_over'
 
         self.shooting_count = 0
@@ -44,7 +46,7 @@ class Main:
     def update_playing(self):
         """Update logic while the game is running."""
         if not self.enemies_manager.enemies:
-            self.enemies_manager.create_wave(0, 5, 2)
+            self.enemies_manager.create_wave(0, 7, 4)
 
         if px.btnp(px.KEY_SPACE) and self.heat < self.max_heat and self.cooldown == 0:
             if self.shooting_count % 20 == 10:
@@ -77,18 +79,12 @@ class Main:
 
     def move(self):
         """Handle player movement."""
-        if px.btn(px.KEY_W) or px.btn(px.KEY_UP):
-            if self.y > 0:
-                self.y -= 1
         if px.btn(px.KEY_A) or px.btn(px.KEY_LEFT):
             if self.x > 0:
-                self.x -= 1
-        if px.btn(px.KEY_S) or px.btn(px.KEY_DOWN):
-            if self.y < self.SCREEN_SIZE - self.SHIP_SIZE[1]:
-                self.y += 1
+                self.x -= self.ship_speed
         if px.btn(px.KEY_D) or px.btn(px.KEY_RIGHT):
             if self.x < self.SCREEN_SIZE - self.SHIP_SIZE[0]:
-                self.x += 1
+                self.x += self.ship_speed
 
     def lose_life(self):
         """Reduce player lives and check for game over."""
@@ -112,14 +108,10 @@ class Main:
         self.shooting_manager.draw_missiles()
         self.enemies_manager.draw_enemies()
 
-        # Management of flashing if lives are at 1
-        if self.lives == 1:
-            # Flashes red every 10 frames (alternating between red and invisible)
-            if (px.frame_count // 10) % 2 == 0:
-                px.text(2, 2, f"LIVES : {self.lives}", px.COLOR_RED)
-        else:
-            # Displays lives normally
-            px.text(2, 2, f"LIVES : {self.lives}", 7)
+        # Displays lives
+        if self.lives > 1 or (self.lives == 1 and (px.frame_count // 10) % 2 == 0):
+            for i in range(self.lives):
+                px.blt(1 + i * 8, 1, 2, 0, 0, 8, 8, 0)
 
         # Displays the score
         px.text(75, 2, f"SCORE : {self.score}", 7)
