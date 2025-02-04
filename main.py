@@ -1,4 +1,5 @@
 import pyxel as px
+from source.boost import *
 from source.enemies import *
 from source.shooting import *
 
@@ -11,9 +12,10 @@ class Main:
         """Initialize the game and load resources."""
         px.init(self.SCREEN_SIZE, self.SCREEN_SIZE, "Pixel Invaders")
 
-        # Load the ship image
-        px.image(0).load(0, 0, "assets/images/player_ship.png")
-        px.image(2).load(0, 0, "assets/images/heart.png")
+        # Load the all the images
+        px.images[0].load(0, 0, "assets/images/player_ship.png")
+        px.images[1].load(0, 0, "assets/images/enemy_1.png")
+        px.images[2].load(0, 0, "assets/images/boost_spritesheet.png")
 
         self.reset_game()
 
@@ -25,7 +27,6 @@ class Main:
         self.y = self.SCREEN_SIZE - self.SHIP_SIZE[1]
         self.lives = 5
         self.score = 0
-        self.ship_speed = 2
         self.game_state = "playing"  # Can be 'playing' or 'game_over'
 
         self.shooting_count = 0
@@ -33,8 +34,14 @@ class Main:
         self.max_heat = 10  # Overheating threshold
         self.cooldown = 0  # Waiting time in the event of overheating
 
+        self.ship_speed = 2
+        self.enemies_speed = 1
+        self.extra_life_given = False
+        self.is_big_shoot = False
+
         self.shooting_manager = ShootingManager(self)
         self.enemies_manager = EnemiesManager(self)
+        self.boosts_manager = BoostsManager(self)
 
     def update(self):
         """Update game logic."""
@@ -48,21 +55,43 @@ class Main:
         if not self.enemies_manager.enemies:
             self.enemies_manager.create_wave(0, 7, 4)
 
-        if px.btnp(px.KEY_SPACE) and self.heat < self.max_heat and self.cooldown == 0:
-            if self.shooting_count % 20 == 10:
-                self.shooting_manager.create_missile(
-                    self.x, self.y + self.SHIP_SIZE[0] // 2
-                )
-                self.shooting_manager.create_missile(
-                    self.x + self.SHIP_SIZE[0], self.y + self.SHIP_SIZE[0] // 2
-                )
-            else:
+        if self.is_big_shoot:
+            side = px.frame_count % 6
+            if side == 0:
                 self.shooting_manager.create_laser(
-                    1, 3, 10, self.x, self.y, self.SHIP_SIZE[0]
+                    1, 5, 1, self.x, self.y + self.SHIP_SIZE[0] // 2, 0
                 )
-            self.shooting_count += 1
-            self.heat += 2  # Each shot increases the heat
+            elif side == 3:
+                self.shooting_manager.create_laser(
+                    1,
+                    5,
+                    1,
+                    self.x + self.SHIP_SIZE[0],
+                    self.y + self.SHIP_SIZE[0] // 2,
+                    0,
+                )
+        else:
+            if (
+                px.btnp(px.KEY_SPACE)
+                and self.heat < self.max_heat
+                and self.cooldown == 0
+            ):
+                if self.shooting_count % 20 == 10:
+                    self.shooting_manager.create_missile(
+                        self.x, self.y + self.SHIP_SIZE[0] // 2
+                    )
+                    self.shooting_manager.create_missile(
+                        self.x + self.SHIP_SIZE[0], self.y + self.SHIP_SIZE[0] // 2
+                    )
+                else:
+                    self.shooting_manager.create_laser(
+                        1, 3, 10, self.x, self.y, self.SHIP_SIZE[0]
+                    )
+                self.shooting_count += 1
+                self.heat += 2  # Each shot increases the heat`
 
+        self.boosts_manager.update_boosts()
+        self.boosts_manager.apply_boosts()
         self.shooting_manager.overheating()
         self.shooting_manager.move_lasers()
         self.shooting_manager.move_missiles()
@@ -103,15 +132,16 @@ class Main:
     def draw_playing(self):
         """Draw the game screen."""
         px.blt(self.x, self.y, 0, 0, 0, self.SHIP_SIZE[0], self.SHIP_SIZE[1] + 2)
-        self.shooting_manager.draw_overheating()
+        self.enemies_manager.draw_enemies()
         self.shooting_manager.draw_lasers()
         self.shooting_manager.draw_missiles()
-        self.enemies_manager.draw_enemies()
+        self.shooting_manager.draw_overheating()
+        self.boosts_manager.draw_boosts()
 
         # Displays lives
         if self.lives > 1 or (self.lives == 1 and (px.frame_count // 10) % 2 == 0):
             for i in range(self.lives):
-                px.blt(1 + i * 8, 1, 2, 0, 0, 8, 8, 0)
+                px.blt(1 + i * 8, 1, 2, 80, 0, 8, 8, 0)
 
         # Displays the score
         px.text(75, 2, f"SCORE : {self.score}", 7)

@@ -8,20 +8,13 @@ class EnemiesManager:
     ROW_SPACING = 2
     COLUMN_SPACING = 10
     INITIAL_Y = 10
-    ENEMY_SPEED = 1
 
     def __init__(self, main):
         self.main = main
-
-        # Load enemy sprite into image bank 1
-        px.image(1).load(0, 0, "assets/images/enemy_1.png")
-
         # "enemy_id": [pyxel image_bank, width, height]
         self.enemy_data = [{"image_bank": 1, "width": 9, "height": 9}]
-
         # Active enemies list as dictionaries
         self.enemies = []
-        self.speed = self.ENEMY_SPEED  # Horizontal movement speed
 
     def create_wave(
         self, enemy_id: int, num_enemies: int = 5, num_rows: int = 1
@@ -62,13 +55,13 @@ class EnemiesManager:
 
         # Reverse direction and move enemies down if edge hit
         if edge_hit:
-            self.speed = -self.speed
+            self.main.enemies_speed = -self.main.enemies_speed
             for enemy in self.enemies:
                 enemy["y"] += self.ROW_SPACING
 
         # Move enemies horizontally
         for enemy in self.enemies:
-            enemy["x"] += self.speed
+            enemy["x"] += self.main.enemies_speed
 
             # Check if an enemy reaches the bottom of the screen
             if enemy["y"] + enemy[

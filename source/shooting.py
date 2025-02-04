@@ -1,5 +1,5 @@
-import pyxel as px
 import math
+import pyxel as px
 
 
 class ShootingManager:
@@ -74,7 +74,8 @@ class ShootingManager:
     def move_lasers(self):
         """Move all the lasers upwards and remove them if they are off-screen."""
         for laser in self.lasers[:]:  # Iterate over a copy to avoid modification issues
-            laser[1] -= 5  # Move the laser upward
+            speed = 10 if self.main.is_big_shoot else 5
+            laser[1] -= speed  # Move the laser upward
             if laser[1] < 0:  # Remove if off-screen
                 self.lasers.remove(laser)
 
