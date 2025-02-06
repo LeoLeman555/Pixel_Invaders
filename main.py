@@ -12,6 +12,45 @@ class Main:
         """Initialize the game and load resources."""
         px.init(self.SCREEN_SIZE, self.SCREEN_SIZE, "Pixel Invaders")
 
+        self.waves_data = [
+            [1, 1, 0],
+            [2, 1, 0],
+            [3, 1, 0],
+            [4, 1, 0],
+            [5, 1, 0],
+            [6, 1, 0],
+            [3, 2, 0],
+            [7, 1, 0],
+            [8, 1, 0],
+            [4, 2, 0],
+            [9, 1, 0],
+            [5, 2, 0],
+            [10, 1, 0],
+            [6, 2, 0],
+            [3, 3, 0],
+            [7, 2, 0],
+            [4, 3, 0],
+            [8, 2, 0],
+            [5, 3, 0],
+            [9, 2, 0],
+            [6, 3, 0],
+            [10, 2, 0],
+            [7, 3, 0],
+            [8, 3, 0],
+            [6, 4, 0],
+            [9, 3, 0],
+            [6, 4, 0],
+            [10, 3, 0],
+            [7, 4, 0],
+            [8, 4, 0],
+            [9, 4, 0],
+            [10, 4, 0],
+            [7, 5, 0],
+            [8, 5, 0],
+            [9, 5, 0],
+            [10, 5, 0],
+        ]
+
         # Load the all the images
         px.images[0].load(0, 0, "assets/images/player_ship.png")
         px.images[1].load(0, 0, "assets/images/enemy_1.png")
@@ -27,6 +66,8 @@ class Main:
         self.y = self.SCREEN_SIZE - self.SHIP_SIZE[1]
         self.lives = 5
         self.score = 0
+        self.wave = 0
+        self.max_wave = len(self.waves_data)
         self.game_state = "playing"  # Can be 'playing' or 'game_over'
 
         self.shooting_count = 0
@@ -53,7 +94,12 @@ class Main:
     def update_playing(self):
         """Update logic while the game is running."""
         if not self.enemies_manager.enemies:
-            self.enemies_manager.create_wave(0, 7, 4)
+            if self.wave == self.max_wave:
+                self.wave = 0
+                self.score += 1000
+            self.enemies_manager.create_wave(*self.waves_data[self.wave])
+            self.score += 10 * self.wave
+            self.wave += 1
 
         if self.is_big_shoot:
             side = px.frame_count % 6
@@ -145,14 +191,16 @@ class Main:
 
         # Displays the score
         px.text(75, 2, f"SCORE : {self.score}", 7)
+        px.text(75, 10, f"WAVE : {self.wave}", 7)
 
     def draw_game_over(self):
         """Draw the game over screen."""
         if (px.frame_count // 10) % 2 == 0:
-            px.text(30, 20, "--- GAME OVER ---", 7)
-            px.text(30, 40, f"SCORE: {self.score}", 7)
             px.text(2, 110, "PRESS 'R' TO RESTART", 7)
             px.text(2, 120, "PRESS 'Q' TO QUIT", 7)
+        px.text(30, 20, "--- GAME OVER ---", 7)
+        px.text(30, 40, f"SCORE: {self.score}", 7)
+        px.text(30, 50, f"WAVE : {self.wave}", 7)
 
     def run(self):
         """Start the game loop."""

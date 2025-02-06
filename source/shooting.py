@@ -112,4 +112,4 @@ class ShootingManager:
         # Overheating status display
         if self.main.cooldown > 0:
             if (px.frame_count // 10) % 2 == 0:
-                px.text(40, 10, "OVERHEAT !", 8)
+                px.text(40, 10, "OVERHEAT", 8)

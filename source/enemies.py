@@ -7,7 +7,7 @@ class EnemiesManager:
     # Constants for configuration
     ROW_SPACING = 2
     COLUMN_SPACING = 10
-    INITIAL_Y = 10
+    INITIAL_Y = 20
 
     def __init__(self, main):
         self.main = main
@@ -17,7 +17,7 @@ class EnemiesManager:
         self.enemies = []
 
     def create_wave(
-        self, enemy_id: int, num_enemies: int = 5, num_rows: int = 1
+        self, num_enemies: int = 1, num_rows: int = 1, enemy_id: int = 1
     ) -> None:
         """Create a wave of enemies with optional rows."""
         if not (0 <= enemy_id < len(self.enemy_data)):
