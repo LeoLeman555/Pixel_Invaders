@@ -7,23 +7,60 @@ on:
 
 jobs:
   format-check:
-    runs-on: ubuntu-latest  # Uses Ubuntu as environment
+    runs-on: ubuntu-latest
     steps:
-      # Step 1: Retrieve the code
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 2: Install Python 3.12
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.12'
 
-      # Step 3 : Install Black
       - name: Install Black
-        run: pip install black
+        run: pip install black==23.10.1
 
-      # Step 4: Check formatting
-      - name: Run Black check
-        run: black --check .
-        
+      - name: Run Black auto-format
+        run: black .
+
+      - name: Commit changes if needed
+        id: commit_changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add .
+          
+          if ! git diff --quiet --staged; then
+            git commit -m "style(source): apply Black formatting"
+            git push
+            echo "changes_made=true" >> $GITHUB_ENV
+          fi
+
+      - name: Comment on PR if formatting was fixed
+        if: env.changes_made == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo, number } = context.issue;
+            const message = `### Code Formatting Applied  
+            The Python code in this pull request has been automatically formatted using [Black](https://black.readthedocs.io/en/stable/).  
+            
+            **Changes applied:**  
+            - Code formatting was updated to adhere to Black's style guide.  
+            - These changes have been committed and pushed automatically.  
+            
+            _No manual action is required from you._  
+            _Please review the changes before merging._  
+            
+            _This is an automated message._`;
+            
+            github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: number,
+              body: message
+            });
