@@ -1,3 +1,4 @@
+import json
 import pyxel as px
 from source.boosts_manager import *
 from source.enemies_manager import *
@@ -10,44 +11,8 @@ class Main:
         """Initialize and start the game: Pixel Invaders."""
         px.init(128, 128, "Pixel Invaders")
 
-        self.waves_data = [
-            [1, 1, 0],
-            [2, 1, 1],
-            [3, 1, 0],
-            [4, 1, 0],
-            [5, 1, 1],
-            [6, 1, 0],
-            [3, 2, 1],
-            [7, 1, 0],
-            [8, 1, 1],
-            [4, 2, 0],
-            [9, 1, 1],
-            [5, 2, 0],
-            [10, 1, 0],
-            [6, 2, 1],
-            [3, 3, 0],
-            [7, 2, 0],
-            [4, 3, 1],
-            [8, 2, 0],
-            [5, 3, 1],
-            [9, 2, 0],
-            [6, 3, 0],
-            [10, 2, 1],
-            [7, 3, 0],
-            [8, 3, 1],
-            [6, 4, 0],
-            [9, 3, 0],
-            [6, 4, 1],
-            [10, 3, 0],
-            [7, 4, 0],
-            [8, 4, 0],
-            [9, 4, 1],
-            [10, 4, 0],
-            [7, 5, 0],
-            [8, 5, 1],
-            [9, 5, 0],
-            [10, 5, 1],
-        ]
+        with open("data/waves.json", "r") as file:
+            self.waves_data = json.load(file)["waves"]
 
         # Load the all the images
         px.images[0].load(0, 0, "assets/images/player_spritesheet.png")

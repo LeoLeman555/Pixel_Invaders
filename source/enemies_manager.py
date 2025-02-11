@@ -62,7 +62,7 @@ class EnemiesManager:
             if enemy.y + enemy.height >= px.height or self.check_collision(
                 enemy, self.main.player
             ):
-                self.main.lose_life()
+                self.main.player.lose_life()
                 self.enemies.remove(enemy)
 
     def enemy_shoot(self):
@@ -106,7 +106,8 @@ class EnemiesManager:
             if self.main.wave == self.main.max_wave:
                 self.main.wave = 0
                 self.main.score += 1000
-            self.create_wave(*self.main.waves_data[self.main.wave])
+            wave_data = self.main.waves_data[self.main.wave]
+            self.create_wave(wave_data["enemies_per_row"], wave_data["rows"], wave_data["enemy_id"])
             self.main.score += 10 * self.main.wave
             self.main.wave += 1
 
