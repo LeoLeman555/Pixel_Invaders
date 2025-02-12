@@ -11,7 +11,7 @@ EXPLOSION_LIFETIME = 9
 
 class Bomb:
     """Represent a bomb dropped by the boss."""
-    
+
     def __init__(self, main, x: int, y: int):
         self.main = main
         self.x = x
@@ -33,7 +33,7 @@ class Bomb:
 
 class Explosion:
     """Represent an explosion caused by a bomb hitting the ground."""
-    
+
     def __init__(self, main, x: int):
         self.main = main
         self.x = x
@@ -68,7 +68,7 @@ class Explosion:
 
 class Boss:
     """Manage the boss enemy in the game."""
-    
+
     def __init__(self, main):
         self.main = main
         self.x = 39
@@ -110,7 +110,10 @@ class Boss:
     def is_collision(self) -> bool:
         """Check if the boss is hit by a laser."""
         for laser in self.main.shooting_manager.lasers:
-            if self.x + 14 <= laser.x <= self.x + 33 and self.y <= laser.y <= self.y + 13:
+            if (
+                self.x + 14 <= laser.x <= self.x + 33
+                and self.y <= laser.y <= self.y + 13
+            ):
                 laser.active = False
                 self.hp -= laser.damage
 
@@ -128,7 +131,9 @@ class Boss:
 
         for explosion in self.explosions:
             explosion.update()
-        self.explosions = [explosion for explosion in self.explosions if explosion.active]
+        self.explosions = [
+            explosion for explosion in self.explosions if explosion.active
+        ]
 
         if self.hp <= 0:
             self.boss_active = False
@@ -143,7 +148,9 @@ class Boss:
 
         pyxel.blt(self.x, self.y, 1, 80, 0, 49, 50, 0)
         pyxel.rect(self.x + 11, self.y - 6, 27, 4, 8)  # Health bar background
-        pyxel.rect(self.x + 11, self.y - 6, 27 * (self.hp / BOSS_HP), 4, 11)  # Health bar fill
+        pyxel.rect(
+            self.x + 11, self.y - 6, 27 * (self.hp / BOSS_HP), 4, 11
+        )  # Health bar fill
 
         # "Incoming" warning when entering
         if (pyxel.frame_count // 15) % 2 == 0 and self.y <= 30:
