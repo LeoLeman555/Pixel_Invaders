@@ -1,6 +1,7 @@
 import json
 import pyxel as px
 from source.boosts_manager import *
+from source.boss import *
 from source.enemies_manager import *
 from source.player import *
 from source.shooting_manager import *
@@ -37,6 +38,7 @@ class Main:
         self.shooting_manager = ShootingManager(self)
         self.enemies_manager = EnemiesManager(self)
         self.boosts_manager = BoostsManager(self)
+        self.boss = Boss(self)
 
     def update(self):
         """Update game logic."""
@@ -47,6 +49,8 @@ class Main:
 
     def update_playing(self):
         """Update logic while the game is running."""
+        if self.boss.active:
+            self.boss.update()
         self.player.update()
         self.boosts_manager.update()
         self.enemies_manager.update()
@@ -69,6 +73,8 @@ class Main:
 
     def draw_playing(self):
         """Draw the game screen."""
+        if self.boss.active:
+            self.boss.draw()
         self.shooting_manager.draw()
         self.enemies_manager.draw()
         self.boosts_manager.draw()

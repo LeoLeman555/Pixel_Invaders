@@ -107,10 +107,19 @@ class EnemiesManager:
                 self.main.wave = 0
                 self.main.score += 1000
             wave_data = self.main.waves_data[self.main.wave]
-            self.create_wave(wave_data["enemies_per_row"], wave_data["rows"], wave_data["enemy_id"])
-            self.main.score += 10 * self.main.wave
-            self.main.wave += 1
-
+            if wave_data["enemy_id"] == 2:
+                self.main.boss.active = True
+                self.main.score += 100 * self.main.wave
+                self.main.wave += 1
+            else:
+                if not self.main.boss.active:
+                    self.create_wave(
+                        wave_data["enemies_per_row"],
+                        wave_data["rows"],
+                        wave_data["enemy_id"],
+                    )
+                    self.main.score += 10 * self.main.wave
+                    self.main.wave += 1
         for enemy_laser in self.enemy_lasers:
             enemy_laser.update()
         self.enemy_lasers = [laser for laser in self.enemy_lasers if laser.active]
