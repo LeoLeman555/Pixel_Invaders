@@ -5,6 +5,10 @@ on:
     paths:
       - '**/*.py'
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   format-check:
     runs-on: ubuntu-latest
@@ -30,35 +34,53 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-      
+          
           git add .
-      
+          
           if ! git diff --quiet --staged; then
             git commit -m "style(source): apply Black formatting"
-            git push origin HEAD:${{ github.head_ref }}
             echo "changes_made=true" >> $GITHUB_ENV
           fi
 
+      - name: Determine if PR is from a fork
+        id: check_fork
+        run: |
+          if [[ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ]]; then
+            echo "is_fork=true" >> $GITHUB_ENV
+          else
+            echo "is_fork=false" >> $GITHUB_ENV
+          fi
 
-      - name: Comment on PR if formatting was fixed
-        if: env.changes_made == 'true'
+      - name: Push changes if PR is from the same repo
+        if: env.changes_made == 'true' && env.is_fork == 'false'
+        run: |
+          git push origin ${{ github.head_ref }}
+
+      - name: Comment with patch if PR is from a fork
+        if: env.changes_made == 'true' && env.is_fork == 'true'
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { owner, repo, number } = context.issue;
-            const message = `### Code Formatting Applied  
-            The Python code in this pull request has been automatically formatted using [Black](https://black.readthedocs.io/en/stable/).  
+            const { execSync } = require('child_process');
+
+            // Générer un patch avec git diff
+            const patch = execSync('git diff', { encoding: 'utf8' });
+
+            const message = `### Code Formatting Suggestions  
+            The Python code in this PR does not follow [Black](https://black.readthedocs.io/en/stable/) formatting.  
             
-            **Changes applied:**  
-            - Code formatting was updated to adhere to Black's style guide.  
-            - These changes have been committed and pushed automatically.  
+            **Suggested changes:**  
+            \`\`\`diff
+            ${patch}
+            \`\`\`
             
-            _No manual action is required from you._  
-            _Please review the changes before merging._  
+            _Since this PR comes from a fork, we cannot push changes directly._  
+            _You can apply these changes manually or run \`black .\` before pushing._  
             
-            _This is an automated message._`;
-            
+            _This is an automated suggestion._`;
+
             github.rest.issues.createComment({
               owner,
               repo,
