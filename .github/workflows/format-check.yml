@@ -35,7 +35,7 @@ jobs:
           
           if ! git diff --quiet --staged; then
             git commit -m "style(source): apply Black formatting"
-            git push
+            git push origin HEAD:${{ github.head_ref }}
             echo "changes_made=true" >> $GITHUB_ENV
           fi
 
