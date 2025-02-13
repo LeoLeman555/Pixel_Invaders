@@ -20,12 +20,16 @@ class Player:
 
     def move(self):
         """Handle player movement."""
-        if px.btn(px.KEY_A) or px.btn(px.KEY_LEFT):
-            if self.x > 0:
+        if px.btn(px.KEY_A) or px.btn(px.KEY_Q) or px.btn(px.KEY_LEFT):
+            if self.x > 0 - self.width // 2:
                 self.x -= self.speed
+            else:
+                self.x = px.width - self.width
         if px.btn(px.KEY_D) or px.btn(px.KEY_RIGHT):
-            if self.x < px.height - self.width:
+            if self.x < px.height - self.width // 2:
                 self.x += self.speed
+            else:
+                self.x = 0
 
     def update(self):
         """Update the player's state each frame."""
