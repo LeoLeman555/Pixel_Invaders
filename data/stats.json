@@ -1,0 +1,17 @@
+{
+    "records": {
+        "highscore": 0,
+        "highest_wave_reached": 0
+    },
+    "global_stats": {
+        "total_games_played": 0,
+        "total_score": 0,
+        "average_score": 0,
+        "total_time_played": 0,
+        "total_enemies_killed": 0,
+        "total_waves_completed": 0,
+        "total_successful_shots": 0,
+        "total_shots_fired": 0,
+        "average_accuracy": 0
+    }
+}

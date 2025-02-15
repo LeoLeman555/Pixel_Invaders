@@ -115,6 +115,8 @@ class Boss:
                 and self.y <= laser.y <= self.y + 13
             ):
                 laser.active = False
+                if not self.main.shooting_manager.is_big_shoot:
+                    self.main.successful_shots += 1
                 self.hp -= laser.damage
 
     def update(self):

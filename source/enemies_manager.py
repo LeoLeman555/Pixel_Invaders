@@ -83,16 +83,21 @@ class EnemiesManager:
                 if self.check_collision(enemy, laser):
                     enemy.lives -= laser.damage
                     laser.active = False
+                    if not self.main.shooting_manager.is_big_shoot:
+                        self.main.successful_shots += 1
                     if enemy.lives <= 0:
                         self.enemies.remove(enemy)
+                        self.main.enemies_killed += 1
                         self.main.score += enemy.score
 
         for missile in self.main.shooting_manager.missiles[:]:
             for enemy in self.enemies[:]:
                 if self.check_collision(enemy, missile):
                     enemy.lives -= missile.damage
+                    self.main.successful_shots += 1
                     if enemy.lives <= 0:
                         self.enemies.remove(enemy)
+                        self.main.enemies_killed += 1
                         self.main.score += enemy.score
 
     def update(self):
