@@ -40,7 +40,7 @@ class Main:
 
         self.max_wave = len(self.waves_data)
         self.game_state = (
-            "menu"  # Can be 'menu' or 'playing' or 'game_over' or 'show_stats'
+            "menu"  # Can be 'menu' or 'playing' or 'game_over' or 'show_stats' or 'rules'
         )
 
         self.enemies_speed = 1
@@ -60,7 +60,12 @@ class Main:
                 self.game_state = "menu"
             if px.btnp(px.KEY_Q):
                 px.quit()
-        if self.game_state == "playing":
+        elif self.game_state == "rules":
+            if px.btnp(px.KEY_M):
+                self.game_state = "menu"
+            if px.btnp(px.KEY_S):
+                self.game_state = "playing"
+        elif self.game_state == "playing":
             self.update_playing()
         elif self.game_state == "game_over":
             self.update_game_over()
@@ -93,6 +98,8 @@ class Main:
         px.cls(0)
         if self.game_state == "show_stats":
             self.menu.draw_stats()
+        elif self.game_state == "rules":
+            self.menu.draw_rules()
         elif self.game_state == "playing":
             self.draw_playing()
         elif self.game_state == "game_over":

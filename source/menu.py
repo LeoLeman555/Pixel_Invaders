@@ -7,8 +7,9 @@ class Menu:
 
     def __init__(self, main):
         self.main = main
-        self.options = ["START", "STATISTICS", "QUIT"]  # Menu options
+        self.options = ["START", "RULES", "STATISTICS", "QUIT"]  # Menu options
         self.selected = 0  # Index of the currently selected option
+        self.rules_frame_count = 0
         self.stats_frame_count = 0
         self.menu_frame_count = 0
         self.game_over_frame_count = 0
@@ -31,9 +32,11 @@ class Menu:
             if self.selected == 0:  # Start game
                 self.main.reset_game()
                 self.main.game_state = "playing"
-            elif self.selected == 1:  # Show statistics
+            elif self.selected == 1:
+                self.main.game_state = "rules"
+            elif self.selected == 2:  # Show statistics
                 self.main.game_state = "show_stats"
-            elif self.selected == 2:  # Quit game
+            elif self.selected == 3:  # Quit game
                 px.quit()
 
         # Animate the text movement every 5 frames
@@ -54,7 +57,7 @@ class Menu:
 
         # Create a wave-like animation effect
         wave_offset = (self.menu_frame_count // 5) % 10
-        animated_menu = [("START", 40), ("STATISTICS", 55), ("QUIT", 70)]
+        animated_menu = [("START", 40), ("RULES", 55), ("STATISTICS", 70), ("QUIT", 85)]
 
         # Display menu options with animation and color change
         for i, (text, y) in enumerate(animated_menu):
@@ -141,7 +144,7 @@ class Menu:
             px.text(2, 120, "PRESS 'Q' TO QUIT", 7)
 
     def draw_game_over(self):
-        """Draw the animated game over screen with statistics and restart options."""
+        """Draw the animated game over screen with statistics and menu options."""
         self.game_over_frame_count += 1
         title_y = min(5, -10 + (self.game_over_frame_count // 2))
         px.text(30, title_y, "--- GAME OVER ---", 7)
@@ -169,3 +172,28 @@ class Menu:
         if (self.game_over_frame_count // 10) % 2 == 0:
             px.text(2, 110, "PRESS 'M' FOR MENU", 7)
             px.text(2, 120, "PRESS 'Q' TO QUIT", 7)
+
+    def draw_rules(self):
+        """Draw the rules."""
+        self.rules_frame_count += 1
+        title_y = min(5, -10 + (self.rules_frame_count // 2))
+        px.text(30, title_y, "--- GAME RULES ---", 7)
+
+        wave_offset = (self.rules_frame_count // 5) % 10
+        animated_text = [
+            ("1. Pilot your ship with arrows", 20),
+            ("2. Shoot with space bar", 30),
+            ("3. Defeat enemy and boss waves", 40),
+            ("4. Don't shoot too fast, or...", 50),
+            ("5. Power-ups can be very useful", 60),
+            ("Only one mission :", 80),
+            ("- Survive as long as possible -", 90),
+        ]
+
+        for i, (text, y) in enumerate(animated_text):
+            x_pos = max(3, 100 - (self.rules_frame_count - i * 40) * 5)
+            px.text(x_pos, y, text, 10 + wave_offset // 2 if i > 4 else 7)
+
+        if (self.rules_frame_count // 10) % 2 == 0:
+            px.text(2, 110, "PRESS 'S' TO START", 7)
+            px.text(2, 120, "PRESS 'M' TO MENU", 7)
