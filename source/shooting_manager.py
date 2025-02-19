@@ -9,7 +9,6 @@ class ShootingManager:
     def __init__(self, main):
         self.main = main
         self.player = self.main.player
-        self.shooting_count = 0
         self.heat = 0  # Heat gauge
         self.max_heat = 10  # Overheating threshold
         self.cooldown = 0  # Waiting time in the event of overheating
@@ -75,12 +74,12 @@ class ShootingManager:
                 )
 
         if px.btnp(px.KEY_SPACE) and self.heat < self.max_heat and self.cooldown == 0:
-            if self.shooting_count % 20 == 10:
+            if self.main.shots_fired % 20 == 10:
                 self.create_missile(0, self.player.height // 2)
                 self.create_missile(self.player.width, self.player.height // 2)
             else:
                 self.create_laser(1, 3, 10, 5, self.player.width // 2, 0)
-            self.shooting_count += 1
+            self.main.shots_fired += 1
             self.heat += 2  # Each shot increases the heat
 
         for laser in self.lasers[:]:  # Iterate over a copy to avoid modification issues

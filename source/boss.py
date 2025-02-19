@@ -42,12 +42,12 @@ class Explosion:
         self.hit_player = False
 
     def is_collision_player(self, player):
-        """Check if the boost collides with the player."""
+        """Check if the explosion collides with the player."""
         return (
-            self.x < player.x + player.width
-            and self.x + self.radius * 2 > player.x
-            and 115 < player.y + player.height
-            and 115 + self.radius * 2 > player.y
+            self.x - self.radius < player.x + player.width
+            and self.x + self.radius > player.x
+            and 115 - self.radius < player.y + player.height
+            and 115 + self.radius > player.y
         )
 
     def update(self) -> bool:
@@ -115,6 +115,8 @@ class Boss:
                 and self.y <= laser.y <= self.y + 13
             ):
                 laser.active = False
+                if not self.main.shooting_manager.is_big_shoot:
+                    self.main.successful_shots += 1
                 self.hp -= laser.damage
 
     def update(self):

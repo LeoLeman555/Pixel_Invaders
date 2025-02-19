@@ -3,6 +3,7 @@ import pyxel as px
 from source.boosts_manager import *
 from source.boss import *
 from source.enemies_manager import *
+from source.menu import *
 from source.player import *
 from source.shooting_manager import *
 
@@ -14,6 +15,9 @@ class Main:
 
         with open("data/waves.json", "r") as file:
             self.waves_data = json.load(file)["waves"]
+
+        with open("data/stats.json", "r") as file:
+            self.stats = json.load(file)
 
         # Load the all the images
         px.images[0].load(0, 0, "assets/images/player_spritesheet.png")
@@ -28,8 +32,14 @@ class Main:
         """Reset game variables for a new game."""
         self.score = 0
         self.wave = 0
+        self.time = 0
+        self.enemies_killed = 0
+        self.shots_fired = 0
+        self.successful_shots = 0
+        self.accuracy = 0
+
         self.max_wave = len(self.waves_data)
-        self.game_state = "playing"  # Can be 'playing' or 'game_over'
+        self.game_state = "menu"  # Can be 'menu' or 'playing' or 'game_over' or 'show_stats' or 'rules'
 
         self.enemies_speed = 1
         self.extra_life_given = False
@@ -39,13 +49,26 @@ class Main:
         self.enemies_manager = EnemiesManager(self)
         self.boosts_manager = BoostsManager(self)
         self.boss = Boss(self)
+        self.menu = Menu(self)
 
     def update(self):
         """Update game logic."""
-        if self.game_state == "playing":
+        if self.game_state == "show_stats":
+            if px.btnp(px.KEY_M):
+                self.game_state = "menu"
+            if px.btnp(px.KEY_Q):
+                px.quit()
+        elif self.game_state == "rules":
+            if px.btnp(px.KEY_M):
+                self.game_state = "menu"
+            if px.btnp(px.KEY_S):
+                self.game_state = "playing"
+        elif self.game_state == "playing":
             self.update_playing()
         elif self.game_state == "game_over":
             self.update_game_over()
+        elif self.game_state == "menu":
+            self.menu.update()
 
     def update_playing(self):
         """Update logic while the game is running."""
@@ -56,20 +79,31 @@ class Main:
         self.enemies_manager.update()
         self.shooting_manager.update()
 
+        if px.frame_count % 30 == 0:
+            self.time += 1
+
     def update_game_over(self):
         """Handle input during the game over screen."""
-        if px.btnp(px.KEY_R):
-            self.reset_game()
+        if px.btnp(px.KEY_M):
+            self.menu.save_stats()
+            self.game_state = "menu"
         if px.btnp(px.KEY_Q):
+            self.menu.save_stats()
             px.quit()
 
     def draw(self):
         """Render game elements on the screen."""
         px.cls(0)
-        if self.game_state == "playing":
+        if self.game_state == "show_stats":
+            self.menu.draw_stats()
+        elif self.game_state == "rules":
+            self.menu.draw_rules()
+        elif self.game_state == "playing":
             self.draw_playing()
         elif self.game_state == "game_over":
-            self.draw_game_over()
+            self.menu.draw_game_over()
+        elif self.game_state == "menu":
+            self.menu.draw()
 
     def draw_playing(self):
         """Draw the game screen."""
@@ -90,15 +124,6 @@ class Main:
         # Displays the score
         px.text(75, 2, f"SCORE : {self.score}", 7)
         px.text(75, 10, f"WAVE : {self.wave}", 7)
-
-    def draw_game_over(self):
-        """Draw the game over screen."""
-        if (px.frame_count // 10) % 2 == 0:
-            px.text(2, 110, "PRESS 'R' TO RESTART", 7)
-            px.text(2, 120, "PRESS 'Q' TO QUIT", 7)
-        px.text(30, 20, "--- GAME OVER ---", 7)
-        px.text(30, 40, f"SCORE: {self.score}", 7)
-        px.text(30, 50, f"WAVE : {self.wave}", 7)
 
     def run(self):
         """Start the game loop."""
