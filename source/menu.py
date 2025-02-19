@@ -3,11 +3,72 @@ import pyxel as px
 
 
 class Menu:
+    """Represents the different menu of the game"""
+
     def __init__(self, main):
-        """Initialize the menu."""
         self.main = main
+        self.options = ["START", "STATISTICS", "QUIT"]  # Menu options
+        self.selected = 0  # Index of the currently selected option
         self.stats_frame_count = 0
+        self.menu_frame_count = 0
         self.game_over_frame_count = 0
+
+        self.text_offset_x = 0  # Used for small text animation
+        self.text_direction = 1  # Direction of the text movement
+
+    def update(self):
+        """Handle user input and update the menu's animations."""
+        # Move selection down
+        if px.btnp(px.KEY_DOWN) or px.btnp(px.KEY_S):
+            self.selected = (self.selected + 1) % len(self.options)
+
+        # Move selection up
+        if px.btnp(px.KEY_UP) or px.btnp(px.KEY_W) or px.btnp(px.KEY_Z):
+            self.selected = (self.selected - 1) % len(self.options)
+
+        # Handle selection confirmation
+        if px.btnp(px.KEY_SPACE):
+            if self.selected == 0:  # Start game
+                self.main.reset_game()
+                self.main.game_state = "playing"
+            elif self.selected == 1:  # Show statistics
+                self.main.game_state = "show_stats"
+            elif self.selected == 2:  # Quit game
+                px.quit()
+
+        # Animate the text movement every 5 frames
+        if self.menu_frame_count % 5 == 0:
+            self.text_offset_x += self.text_direction
+
+            # Reverse direction when reaching boundaries
+            if self.text_offset_x > 5 or self.text_offset_x < 0:
+                self.text_direction *= -1
+
+    def draw(self):
+        """Render the menu on the screen with animated elements."""
+        self.menu_frame_count += 1  # Increment frame count for animations
+
+        # Animate title appearing from top
+        title_y = min(15, -10 + self.menu_frame_count)
+        px.text(20, title_y, "--- PIXEL INVADERS ---", 7)
+
+        # Create a wave-like animation effect
+        wave_offset = (self.menu_frame_count // 5) % 10
+        animated_menu = [("START", 40), ("STATISTICS", 55), ("QUIT", 70)]
+
+        # Display menu options with animation and color change
+        for i, (text, y) in enumerate(animated_menu):
+            x_pos = max(
+                45, 100 - (self.menu_frame_count - i * 20) * 5
+            )  # Smooth movement
+            color = (
+                10 + wave_offset // 2 if i == self.selected else 7
+            )  # Highlight selected option
+            px.text(x_pos, y, text, color)
+
+        # Display instructions with small horizontal movement effect
+        px.text(10 + self.text_offset_x, 110, "USE ARROW KEYS TO NAVIGATE", 7)
+        px.text(10 + self.text_offset_x, 120, "PRESS 'SPACE' TO CONFIRM", 7)
 
     def save_stats(self):
         """Update and save the player's game statistics to a JSON file."""
@@ -76,7 +137,7 @@ class Menu:
             px.text(x_pos, y, text, 7 if i % 2 == 0 else 10 + wave_offset // 2)
 
         if (self.stats_frame_count // 10) % 2 == 0:
-            px.text(2, 110, "PRESS 'S' TO START", 7)
+            px.text(2, 110, "PRESS 'M' FOR MENU", 7)
             px.text(2, 120, "PRESS 'Q' TO QUIT", 7)
 
     def draw_game_over(self):
@@ -106,5 +167,5 @@ class Menu:
             px.text(x_pos, y, text, 7 if i % 2 == 0 else 10 + wave_offset // 2)
 
         if (self.game_over_frame_count // 10) % 2 == 0:
-            px.text(2, 110, "PRESS 'R' TO RESTART", 7)
+            px.text(2, 110, "PRESS 'M' FOR MENU", 7)
             px.text(2, 120, "PRESS 'Q' TO QUIT", 7)

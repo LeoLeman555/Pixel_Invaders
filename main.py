@@ -40,7 +40,7 @@ class Main:
 
         self.max_wave = len(self.waves_data)
         self.game_state = (
-            "show_stats"  # Can be 'playing' or 'game_over' or 'show_stats'
+            "menu"  # Can be 'menu' or 'playing' or 'game_over' or 'show_stats'
         )
 
         self.enemies_speed = 1
@@ -56,14 +56,16 @@ class Main:
     def update(self):
         """Update game logic."""
         if self.game_state == "show_stats":
-            if px.btnp(px.KEY_S):
-                self.game_state = "playing"
+            if px.btnp(px.KEY_M):
+                self.game_state = "menu"
             if px.btnp(px.KEY_Q):
                 px.quit()
         if self.game_state == "playing":
             self.update_playing()
         elif self.game_state == "game_over":
             self.update_game_over()
+        elif self.game_state == "menu":
+            self.menu.update()
 
     def update_playing(self):
         """Update logic while the game is running."""
@@ -79,9 +81,9 @@ class Main:
 
     def update_game_over(self):
         """Handle input during the game over screen."""
-        if px.btnp(px.KEY_R):
+        if px.btnp(px.KEY_M):
             self.menu.save_stats()
-            self.reset_game()
+            self.game_state = "menu"
         if px.btnp(px.KEY_Q):
             self.menu.save_stats()
             px.quit()
@@ -95,6 +97,8 @@ class Main:
             self.draw_playing()
         elif self.game_state == "game_over":
             self.menu.draw_game_over()
+        elif self.game_state == "menu":
+            self.menu.draw()
 
     def draw_playing(self):
         """Draw the game screen."""
