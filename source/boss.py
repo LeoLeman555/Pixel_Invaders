@@ -44,7 +44,7 @@ class Explosion:
     def is_collision_player(self, player):
         """Check if the explosion collides with the player."""
         return (
-            self.x - self.radius< player.x + player.width
+            self.x - self.radius < player.x + player.width
             and self.x + self.radius > player.x
             and 115 - self.radius < player.y + player.height
             and 115 + self.radius > player.y

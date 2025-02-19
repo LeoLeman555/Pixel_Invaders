@@ -39,9 +39,7 @@ class Main:
         self.accuracy = 0
 
         self.max_wave = len(self.waves_data)
-        self.game_state = (
-            "menu"  # Can be 'menu' or 'playing' or 'game_over' or 'show_stats' or 'rules'
-        )
+        self.game_state = "menu"  # Can be 'menu' or 'playing' or 'game_over' or 'show_stats' or 'rules'
 
         self.enemies_speed = 1
         self.extra_life_given = False
