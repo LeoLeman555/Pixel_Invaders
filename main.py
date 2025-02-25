@@ -6,6 +6,7 @@ from source.enemies_manager import *
 from source.menu import *
 from source.player import *
 from source.shooting_manager import *
+from source.starfield import *
 
 
 class Main:
@@ -50,6 +51,7 @@ class Main:
         self.boosts_manager = BoostsManager(self)
         self.boss = Boss(self)
         self.menu = Menu(self)
+        self.starfield = StarField()
 
     def update(self):
         """Update game logic."""
@@ -72,6 +74,7 @@ class Main:
 
     def update_playing(self):
         """Update logic while the game is running."""
+        self.starfield.update()
         if self.boss.active:
             self.boss.update()
         self.player.update()
@@ -107,6 +110,7 @@ class Main:
 
     def draw_playing(self):
         """Draw the game screen."""
+        self.starfield.draw()
         if self.boss.active:
             self.boss.draw()
         self.shooting_manager.draw()
