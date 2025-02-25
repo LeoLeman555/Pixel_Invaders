@@ -2,6 +2,7 @@ import json
 import pyxel as px
 from source.boosts_manager import *
 from source.boss import *
+from source.boss_2 import *
 from source.enemies_manager import *
 from source.menu import *
 from source.player import *
@@ -50,6 +51,7 @@ class Main:
         self.enemies_manager = EnemiesManager(self)
         self.boosts_manager = BoostsManager(self)
         self.boss = Boss(self)
+        self.boss_2 = Boss2(self)
         self.menu = Menu(self)
         self.starfield = StarField()
 
@@ -77,6 +79,8 @@ class Main:
         self.starfield.update()
         if self.boss.active:
             self.boss.update()
+        if self.boss_2.active:
+            self.boss_2.update()
         self.player.update()
         self.boosts_manager.update()
         self.enemies_manager.update()
@@ -113,6 +117,8 @@ class Main:
         self.starfield.draw()
         if self.boss.active:
             self.boss.draw()
+        if self.boss_2.active:
+            self.boss_2.draw()
         self.shooting_manager.draw()
         self.enemies_manager.draw()
         self.boosts_manager.draw()

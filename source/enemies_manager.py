@@ -116,8 +116,12 @@ class EnemiesManager:
                 self.main.boss.active = True
                 self.main.score += 100 * self.main.wave
                 self.main.wave += 1
+            elif wave_data["enemy_id"] == 3:
+                self.main.boss_2.active = True
+                self.main.score += 500 * self.main.wave
+                self.main.wave += 1
             else:
-                if not self.main.boss.active:
+                if not self.main.boss.active and not self.main.boss_2.active:
                     self.create_wave(
                         wave_data["enemies_per_row"],
                         wave_data["rows"],
