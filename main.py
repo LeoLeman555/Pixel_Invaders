@@ -66,6 +66,7 @@ class Main:
             if px.btnp(px.KEY_M):
                 self.game_state = "menu"
             if px.btnp(px.KEY_S):
+                self.reset_game()
                 self.game_state = "playing"
         elif self.game_state == "playing":
             self.update_playing()
