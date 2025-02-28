@@ -95,14 +95,13 @@ class Menu:
             "total_successful_shots"
         ] += self.main.successful_shots
         self.main.stats["global_stats"]["total_shots_fired"] += self.main.shots_fired
-        self.main.stats["global_stats"]["average_accuracy"] = round(
-            (
-                self.main.stats["global_stats"]["total_successful_shots"]
-                / self.main.stats["global_stats"]["total_shots_fired"]
-            )
-            * 100,
-            2,
+        accuracy = (
+            self.main.stats["global_stats"]["total_successful_shots"]
+            / self.main.stats["global_stats"]["total_shots_fired"]
+            if self.main.stats["global_stats"]["total_shots_fired"]
+            else 0
         )
+        self.main.stats["global_stats"]["average_accuracy"] = round(accuracy * 100, 2)
 
         with open("data/stats.json", "w") as file:
             json.dump(self.main.stats, file, indent=4)
@@ -148,17 +147,18 @@ class Menu:
         self.game_over_frame_count += 1
         title_y = min(5, -10 + (self.game_over_frame_count // 2))
         px.text(30, title_y, "--- GAME OVER ---", 7)
-
+        accuracy = (
+            self.main.successful_shots / self.main.shots_fired
+            if self.main.shots_fired
+            else 0
+        )
         wave_offset = (self.game_over_frame_count // 5) % 10
         animated_stats = [
             (f"SCORE: {self.main.score} PTS", 20),
             (f"HIGHSCORE: {self.main.stats['records']['highscore']} PTS", 30),
             (f"WAVE: {self.main.wave}", 50),
             (f"HIGHEST WAVE: {self.main.stats['records']['highest_wave_reached']}", 60),
-            (
-                f"ACCURACY: {round((self.main.successful_shots/self.main.shots_fired)* 100, 2)} %",
-                80,
-            ),
+            (f"ACCURACY: {round(accuracy * 100, 2)} %", 80),
             (
                 f"AVERAGE ACCURACY: {self.main.stats['global_stats']['average_accuracy']} %",
                 90,
