@@ -7,9 +7,7 @@ setup(
     install_requires=["pyxel"],
     entry_points={"console_scripts": ["pixel-invaders = pixel_invaders.main:Main"]},
     include_package_data=True,
-    package_data={
-        "pixel_invaders": ["data/*.json", "assets/images/*.png"]
-    },
+    package_data={"pixel_invaders": ["data/*.json", "assets/images/*.png"]},
     author="Léo Leman",
     description="A fun little retro pixel art game where you defend the galaxy against an alien invasion.",
     long_description=open("docs/README_PYPI.md", encoding="utf-8").read(),
