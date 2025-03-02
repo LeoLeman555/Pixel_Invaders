@@ -115,7 +115,7 @@ Pour exécuter le jeu localement, vous avez deux options : l'installer via pip o
    ```
 6. Commencer le jeu :
    ```bash
-   python ./main.py
+   python -m pixel_invaders.main
    ```
 
 ## Licence

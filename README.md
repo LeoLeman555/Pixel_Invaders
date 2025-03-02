@@ -106,7 +106,7 @@ To run the game locally, you have two options: installing it via pip or cloning 
    ```
 6. Start the game:
    ```bash
-   python ./main.py
+   python -m pixel_invaders.main
    ```
 
 ## Controls
