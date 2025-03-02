@@ -2,7 +2,7 @@
 
 [![Version](https://img.shields.io/badge/version-v1.0.0-blue)](https://github.com/LeoLeman555/Pixel_Invaders/releases)
 [![License](https://img.shields.io/github/license/LeoLeman555/Pixel_Invaders)](LICENSE)
-![Status](https://img.shields.io/badge/status-development-orange)
+![Status](https://img.shields.io/badge/status-stable-brightgreen)
 ![Built with Pyxel](https://img.shields.io/badge/built%20with-pyxel-purple)
 ![Code style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)
 
@@ -66,7 +66,7 @@ To run the game locally, you have two options: installing it via pip or cloning 
 
 ### Install via pip
 
-1. When the game is published on PyPI, you can install it directly with:
+1. The game is published on PyPI, you can install it directly with:
    ```bash
    pip install pixel-invaders
    ```
@@ -74,8 +74,6 @@ To run the game locally, you have two options: installing it via pip or cloning 
    ```bash
    pixel-invaders
    ```
-
-> The project is currently under development and will soon be available on PyPI. If you haven't already done so, please follow the instructions below to install the game.
 
 ### Clone the repository
 
