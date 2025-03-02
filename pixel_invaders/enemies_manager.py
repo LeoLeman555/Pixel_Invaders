@@ -1,7 +1,7 @@
 import random
 import pyxel as px
-from source.enemy import *
-from source.enemy_bullet import *
+from pixel_invaders.enemy import *
+from pixel_invaders.enemy_bullet import *
 
 
 class EnemiesManager:

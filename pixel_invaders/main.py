@@ -1,13 +1,13 @@
 import json
 import pyxel as px
-from source.boosts_manager import *
-from source.boss import *
-from source.boss_2 import *
-from source.enemies_manager import *
-from source.menu import *
-from source.player import *
-from source.shooting_manager import *
-from source.starfield import *
+from pixel_invaders.boosts_manager import *
+from pixel_invaders.boss import *
+from pixel_invaders.boss_2 import *
+from pixel_invaders.enemies_manager import *
+from pixel_invaders.menu import *
+from pixel_invaders.player import *
+from pixel_invaders.shooting_manager import *
+from pixel_invaders.starfield import *
 
 
 class Main:

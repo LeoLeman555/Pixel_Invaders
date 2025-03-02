@@ -31,7 +31,7 @@ This project is an introductory exercise in leveraging GitHub's capabilities, in
 
 ## Prerequisites
 
-This project requires [Python 3.12](https://www.python.org/) installed on your machine. If you haven't installed it yet, you can download it from the official Python website.
+This project requires [Python 3.11](https://www.python.org/) installed on your machine. If you haven't installed it yet, you can download it from the official Python website.
 
 ## Features
 

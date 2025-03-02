@@ -1,6 +1,6 @@
 import math
 import pyxel as px
-from source.player_bullet import *
+from pixel_invaders.player_bullet import *
 
 
 class ShootingManager:
