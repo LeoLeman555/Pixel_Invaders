@@ -15,9 +15,9 @@ This project is an introductory exercise in leveraging GitHub's capabilities, in
 
 ## Preview
 
-| ![Demo 1](assets/images/demo/menu.gif) | ![Demo 2](assets/images/demo/gameplay.gif) |
+| ![Demo 1](pixel_invaders/assets/images/demo/menu.gif) | ![Demo 2](pixel_invaders/assets/images/demo/gameplay.gif) |
 |-----------------------------------------|-----------------------------------------|
-| ![Demo 3](assets/images/demo/boss_fight_1.gif) | ![Demo 4](assets/images/demo/boss_fight_2.gif) |
+| ![Demo 3](pixel_invaders/assets/images/demo/boss_fight_1.gif) | ![Demo 4](pixel_invaders/assets/images/demo/boss_fight_2.gif) |
 
 ## Table of Contents
 
