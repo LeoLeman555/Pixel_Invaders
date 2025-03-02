@@ -15,9 +15,9 @@ Ce projet est un exercice d'introduction à l'utilisation des capacités de GitH
 
 ## Aperçu
 
-| ![Demo 1](../assets/images/demo/menu.gif) | ![Demo 2](../assets/images/demo/gameplay.gif) |
+| ![Demo 1](../pixel_invaders/assets/images/demo/menu.gif) | ![Demo 2](../pixel_invaders/assets/images/demo/gameplay.gif) |
 |-----------------------------------------|-----------------------------------------|
-| ![Demo 3](../assets/images/demo/boss_fight_1.gif) | ![Demo 4](../assets/images/demo/boss_fight_2.gif) |
+| ![Demo 3](../pixel_invaders/assets/images/demo/boss_fight_1.gif) | ![Demo 4](../pixel_invaders/assets/images/demo/boss_fight_2.gif) |
 
 
 ## Table des matières
