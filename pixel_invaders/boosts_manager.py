@@ -1,6 +1,6 @@
 import random
 import pyxel as px
-from source.boost import *
+from pixel_invaders.boost import *
 
 
 class BoostsManager:

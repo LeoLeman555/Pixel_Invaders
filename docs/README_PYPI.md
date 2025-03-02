@@ -10,7 +10,7 @@ Pixel Invaders is a retro arcade game where you pilot a spaceship to destroy wav
 
 ## Prerequisites
 
-- [Python 3.12+](https://www.python.org/)  
+- [Python 3.11+](https://www.python.org/)  
 - [Pyxel 3.2.1+](https://github.com/kitao/pyxel) (installed automatically)
 
 ## Features

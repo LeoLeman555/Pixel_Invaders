@@ -32,7 +32,7 @@ Ce projet est un exercice d'introduction à l'utilisation des capacités de GitH
 
 ## Prérequis
 
-Ce projet nécessite l'installation de [Python 3.12](https://www.python.org/) sur votre machine. Si vous ne l'avez pas encore installé, vous pouvez le télécharger sur le site officiel de Python.
+Ce projet nécessite l'installation de [Python 3.11](https://www.python.org/) sur votre machine. Si vous ne l'avez pas encore installé, vous pouvez le télécharger sur le site officiel de Python.
 
 ## Fonctionnalités
 
